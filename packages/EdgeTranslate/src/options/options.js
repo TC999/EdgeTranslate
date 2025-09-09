@@ -2,9 +2,6 @@ import Channel from "common/scripts/channel.js";
 import { i18nHTML } from "common/scripts/common.js";
 import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 
-// 引入深色模式样式
-import "../common/style/dark.styl";
-
 /**
  * Communication channel.
  */

@@ -15,8 +15,6 @@ import Result from "./Result.jsx"; // display translate result
 import Loading from "./Loading.jsx"; // display loading animation
 import Error from "./Error.jsx"; // display error messages
 import Dropdown from "./Dropdown.jsx";
-// 深色模式样式
-import "../../common/style/dark.styl";
 import SettingIcon from "./icons/setting.svg";
 import PinIcon from "./icons/pin.svg";
 import CloseIcon from "./icons/close.svg";
