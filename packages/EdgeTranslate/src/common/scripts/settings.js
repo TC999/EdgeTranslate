@@ -28,6 +28,7 @@ const DEFAULT_SETTINGS = {
         CancelTextSelection: false,
         UseGoogleAnalytics: true,
         UsePDFjs: true,
+        DarkMode: false,
     },
     DefaultTranslator: "GoogleTranslate",
     DefaultPageTranslator: "GooglePageTranslate",

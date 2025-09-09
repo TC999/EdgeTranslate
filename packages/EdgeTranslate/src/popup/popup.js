@@ -3,6 +3,9 @@ import Channel from "common/scripts/channel.js";
 import { i18nHTML } from "common/scripts/common.js";
 import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 
+// 引入深色模式样式
+import "../common/style/dark.styl";
+
 /**
  * Communication channel.
  */
@@ -102,6 +105,9 @@ window.onload = function () {
     );
     // 统一添加事件监听
     addEventListener();
+    
+    // 应用深色模式设置
+    applyDarkMode();
 };
 
 /**
@@ -159,6 +165,28 @@ function saveOption(key, value) {
     item[key] = value;
     chrome.storage.sync.set(item);
 }
+
+/**
+ * 应用深色模式
+ */
+function applyDarkMode() {
+    getOrSetDefaultSettings("OtherSettings", DEFAULT_SETTINGS).then((result) => {
+        if (result.OtherSettings.DarkMode) {
+            document.documentElement.classList.add("dark-mode");
+        } else {
+            document.documentElement.classList.remove("dark-mode");
+        }
+    });
+}
+
+// 监听存储变化，更新深色模式
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    if (namespace === 'sync' && changes.OtherSettings && changes.OtherSettings.newValue) {
+        if ('DarkMode' in changes.OtherSettings.newValue) {
+            applyDarkMode();
+        }
+    }
+});
 
 /**
  * 需要对页面中的元素添加事件监听时，请在此函数中添加

@@ -2,6 +2,9 @@ import Channel from "common/scripts/channel.js";
 import { i18nHTML } from "common/scripts/common.js";
 import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 
+// 引入深色模式样式
+import "../common/style/dark.styl";
+
 /**
  * Communication channel.
  */
@@ -16,6 +19,14 @@ window.onload = () => {
     // 设置不同语言的隐私政策链接
     let PrivacyPolicyLink = document.getElementById("PrivacyPolicyLink");
     PrivacyPolicyLink.setAttribute("href", chrome.i18n.getMessage("PrivacyPolicyLink"));
+
+    // 应用深色模式设置
+    applyDarkMode();
+
+    // 监听深色模式开关变化
+    document.getElementById("dark-mode").addEventListener("change", (event) => {
+        applyDarkMode(event.target.checked);
+    });
 
     /**
      * Set up hybrid translate config.
@@ -42,6 +53,30 @@ window.onload = () => {
     channel.on("hybrid_translator_config_updated", (detail) =>
         setUpTranslateConfig(detail.config, detail.availableTranslators)
     );
+
+    /**
+     * 应用深色模式
+     * @param {boolean} darkModeEnabled - 是否启用深色模式
+     */
+    function applyDarkMode(darkModeEnabled) {
+        // 如果没有提供darkModeEnabled参数，则从存储中获取设置
+        if (darkModeEnabled === undefined) {
+            getOrSetDefaultSettings("OtherSettings", DEFAULT_SETTINGS).then((result) => {
+                if (result.OtherSettings.DarkMode) {
+                    document.documentElement.classList.add("dark-mode");
+                } else {
+                    document.documentElement.classList.remove("dark-mode");
+                }
+            });
+        } else {
+            // 如果提供了darkModeEnabled参数，则直接应用设置
+            if (darkModeEnabled) {
+                document.documentElement.classList.add("dark-mode");
+            } else {
+                document.documentElement.classList.remove("dark-mode");
+            }
+        }
+    }
 
     /**
      * initiate and update settings

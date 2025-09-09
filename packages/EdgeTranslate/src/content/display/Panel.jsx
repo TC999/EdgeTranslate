@@ -15,6 +15,8 @@ import Result from "./Result.jsx"; // display translate result
 import Loading from "./Loading.jsx"; // display loading animation
 import Error from "./Error.jsx"; // display error messages
 import Dropdown from "./Dropdown.jsx";
+// 深色模式样式
+import "../../common/style/dark.styl";
 import SettingIcon from "./icons/setting.svg";
 import PinIcon from "./icons/pin.svg";
 import CloseIcon from "./icons/close.svg";
@@ -147,6 +149,18 @@ export default function ResultPanel() {
          */
         // The translator send this request to make sure current tab can display result panel.
         channel.provide("check_availability", () => Promise.resolve());
+
+        // 应用深色模式设置
+        getOrSetDefaultSettings("OtherSettings", DEFAULT_SETTINGS).then((result) => {
+            applyDarkMode(result.OtherSettings.DarkMode);
+        });
+
+        // 监听深色模式设置变化
+        chrome.storage.onChanged.addListener((changes, area) => {
+            if (area === "sync" && changes.OtherSettings) {
+                applyDarkMode(changes.OtherSettings.newValue.DarkMode);
+            }
+        });
 
         channel.on("start_translating", (detail) => {
             if (checkTimestamp(detail.timestamp)) {
@@ -920,6 +934,18 @@ export function checkTimestamp(timestamp) {
         window.translateResult.timestamp = timestamp;
     }
     return true;
+}
+
+/**
+ * 应用深色模式
+ * @param {boolean} isDarkMode 是否启用深色模式
+ */
+function applyDarkMode(isDarkMode) {
+    if (isDarkMode) {
+        document.documentElement.classList.add("dark-mode");
+    } else {
+        document.documentElement.classList.remove("dark-mode");
+    }
 }
 
 /**
